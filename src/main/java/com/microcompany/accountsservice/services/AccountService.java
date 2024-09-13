@@ -1,11 +1,11 @@
 package com.microcompany.accountsservice.services;
 
-<<<<<<< HEAD
-import com.microcompany.accountsservice.exception.AccountNotfoundException;
-import com.microcompany.accountsservice.exception.CustomerNotFoundException;
-=======
+
 import com.microcompany.accountsservice.exception.AccountNotFoundException;
->>>>>>> 2336014564564b1853d323e05af0519149cb19ea
+import com.microcompany.accountsservice.exception.CustomerNotFoundException;
+
+import com.microcompany.accountsservice.exception.AccountNotFoundException;
+
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.model.Customer;
 import com.microcompany.accountsservice.persistence.AccountRepository;
