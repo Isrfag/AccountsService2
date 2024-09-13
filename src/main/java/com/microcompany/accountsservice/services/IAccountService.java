@@ -11,7 +11,7 @@ public interface IAccountService {
 
     Account getAccount(Long id);
 
-    List<Account> getAccountByOwnerId(Long ownerId);
+    List<Account> getAllAccountByOwnerId(Long ownerId);
 
     Account updateAccount(Long id, Account account);
 

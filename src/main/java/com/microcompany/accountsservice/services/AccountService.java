@@ -43,7 +43,7 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public List<Account> getAccountByOwnerId(Long ownerId) {
+    public List<Account> getAllAccountByOwnerId(Long ownerId) {
         return accountRepository.findByOwnerId(ownerId);
     }
 
