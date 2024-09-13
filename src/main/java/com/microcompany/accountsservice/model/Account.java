@@ -27,15 +27,25 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "No puede quedar en blanco")
+    @NotNull
+    @Size(min = 5, max = 20, message = "Debe ser entre 5 y 20 caracteres")
     private String type;
 
+    @DateTimeFormat
+    @NotNull
     LocalDate openingDate;
 
+    @Min(0)
     private int balance;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "owner_id")
     Customer owner;
 
+     public void isValid() throws Exception {
+        if (type == null || openingDate == null)
+            throw new Exception("Cuenta no válida");
+    }
 
 }
