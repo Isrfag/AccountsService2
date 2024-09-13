@@ -1,13 +1,13 @@
 package com.microcompany.accountsservice.exception;
 
-public class AccountNotfoundException extends GlobalException {
+public class AccountNotFoundException extends GlobalException {
     protected static final long serialVersionUID = 2L;
 
-    public AccountNotfoundException() {
+    public AccountNotFoundException() {
         super("Account not found");
     }
 
-    public AccountNotfoundException(Long accountId) {
+    public AccountNotFoundException(Long accountId) {
         super("Account with id: " + accountId + " not found");
     }
 }
