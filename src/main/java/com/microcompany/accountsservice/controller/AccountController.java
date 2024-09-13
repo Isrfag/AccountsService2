@@ -25,8 +25,16 @@ public class AccountController {
     public ResponseEntity createAccount (@RequestBody Account newAccount) {
         //revisar exception
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.create(newAccount));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                accountService.create(newAccount));
 
+    }
+
+    @RequestMapping(value="/{cid}", method= RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<Account> createAccountByOwnerId(@PathVariable("cid") Long ownerId,@RequestBody Account newAccount) {
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                accountService.createNewOwnerAccount(ownerId,newAccount));
     }
 
     @RequestMapping(value = "/all/{cid}",method = RequestMethod.GET, consumes = "application/json")
@@ -43,18 +51,12 @@ public class AccountController {
         return new ResponseEntity(account,HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{aid}",method = RequestMethod.PUT, consumes = "application/json")
-    public ResponseEntity updateAccount(@PathVariable("aid") Long id, @RequestBody Account account) {
-        //RE
-        account.setId(id);
-        accountService.updateAccount(account.getId(),account);
-        return new ResponseEntity(account,HttpStatus.ACCEPTED);
-    }
+    @RequestMapping(value="/{aid}/owner/{cid}",method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity updateAccountByOwnerId (@PathVariable ("aid") Long aid,@PathVariable("cid") Long ownerId,@RequestBody Account account ) {
 
-    @RequestMapping(value="/owner/{cid}",method = RequestMethod.PUT, consumes = "application/json")
-    public ResponseEntity updateAccountByOwnerId (@PathVariable("cid") Long ownerId,@RequestBody Account account ) {
-
-        accountService.updateOwnerAccount(ownerId);
+        account.setId(aid);
+        account.setOwnerId(ownerId);
+        accountService.updateOwnerAccount(aid,ownerId);
         return new ResponseEntity(account, HttpStatus.ACCEPTED);
     }
 

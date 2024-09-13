@@ -1,5 +1,6 @@
 package com.microcompany.accountsservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
@@ -37,13 +38,20 @@ public class Account {
     @Min(0)
     private int balance;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE} ,fetch=FetchType.LAZY)
+    @JoinColumn(name = "owner_id",insertable = false, updatable = false)
+    @JsonIgnore
     Customer owner;
+
+    @Column(name="owner_id", insertable = false, updatable = false)
+    @NotNull
+    private Long ownerId;
+
 
      public void isValid() throws Exception {
         if (type == null || openingDate == null)
             throw new Exception("Cuenta no válida");
     }
+
 
 }

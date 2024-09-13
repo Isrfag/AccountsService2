@@ -1,6 +1,7 @@
 package com.microcompany.accountsservice.services;
 
 import com.microcompany.accountsservice.model.Account;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,9 +26,9 @@ public interface IAccountService {
 
     Account getOneAccountById(Long aId);
 
-    Account createNewOwnerAccount( Long ownerId);
+    Account createNewOwnerAccount(Long ownerId,Account newAccount);
 
-    Account updateOwnerAccount (Long ownerId);
+    Account updateOwnerAccount(Long aid, Long ownerId);
 
     void deleteOwnerAccount (Long ownerId);
 
