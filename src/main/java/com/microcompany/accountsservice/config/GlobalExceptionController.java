@@ -1,5 +1,6 @@
 package com.microcompany.accountsservice.config;
 
+import com.microcompany.accountsservice.exception.AccountIncorrectBalanceException;
 import com.microcompany.accountsservice.exception.AccountNotFoundException;
 import com.microcompany.accountsservice.exception.CustomerNotFoundException;
 import com.microcompany.accountsservice.exception.GlobalException;
@@ -22,8 +23,8 @@ import java.util.Map;
 public class GlobalExceptionController {
 
     @ExceptionHandler(GlobalException.class)
-    public ResponseEntity<StatusMessage> handleAccountNotFoundException(GlobalException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusMessage(HttpStatus.NOT_FOUND.value(), "GE: No encontrado"));
+    public ResponseEntity<StatusMessage> handleNotFoundException(GlobalException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusMessage(HttpStatus.NOT_FOUND.value(), "GE: Recurso no encontrado"));
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
@@ -38,6 +39,11 @@ public class GlobalExceptionController {
         return new StatusMessage(HttpStatus.NOT_FOUND.value(), "Cliente no encontrado");
     }
 
+    @ExceptionHandler(AccountIncorrectBalanceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public StatusMessage handleNewProductException(AccountIncorrectBalanceException ex) {
+        return new StatusMessage(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+    }
 
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
     @ExceptionHandler(MethodArgumentNotValidException.class)
