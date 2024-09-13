@@ -1,6 +1,7 @@
 package com.microcompany.accountsservice.services;
 
 import com.microcompany.accountsservice.exception.AccountNotfoundException;
+import com.microcompany.accountsservice.exception.CustomerNotFoundException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.model.Customer;
 import com.microcompany.accountsservice.persistence.AccountRepository;
@@ -48,9 +49,10 @@ public class AccountService implements IAccountService {
 
     @Override
     public List<Account> getAllAccountByOwnerId(Long ownerId) {
-
+        //Verificamos si el usuario existe
+        cRepo.findById(ownerId).orElseThrow(() -> new CustomerNotFoundException("El customer añadido no existe"));
         return accountRepository.findByOwnerId(ownerId);
-    }
+   }
 
     @Override
     @Transactional
@@ -93,11 +95,8 @@ public class AccountService implements IAccountService {
     @Override
     @Transactional
     public void deleteAccountsUsingOwnerId(Long ownerId) {
+        cRepo.findById(ownerId).orElseThrow(() -> new CustomerNotFoundException("El customer añadido no existe"));
         accountRepository.deleteByOwnerId(ownerId);
-        /*List<Account> accounts = accountRepository.findByOwnerId(ownerId);
-        for (Account account : accounts) {
-            this.accountRepository.delete(account);
-        }*/
     }
 
     @Override

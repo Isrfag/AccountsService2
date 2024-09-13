@@ -1,5 +1,6 @@
 package com.microcompany.accountsservice.controller;
 
+import com.microcompany.accountsservice.exception.CustomerNotFoundException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.services.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,24 +30,8 @@ public class AccountController {
 
     @RequestMapping(value = "/all/{cid}",method = RequestMethod.GET)
     public ResponseEntity <List<Account>> getAccountsByCustomer(@PathVariable("cid") Long id) {
-        //RE
 
-        List<Account>allAcounts = new ArrayList<>();
-
-        //try {
-            allAcounts= accountService.getAllAccountByOwnerId(id);
-        //} catch () {
-
-        //}
-
-
-
-
-        return new ResponseEntity(allAcounts, HttpStatus.ACCEPTED);
-
-
-        //Product prod = repository.findById(id).orElseThrow(() -> new ProductNotfoundException("No existe " + id));
-        //return ResponseEntity.status(HttpStatus.OK).body(prod);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accountService.getAllAccountByOwnerId(id));
 
     }
 
@@ -74,7 +59,6 @@ public class AccountController {
 
     @RequestMapping(value = "/all/{cid}",method = RequestMethod.DELETE)
     public ResponseEntity deleteAccountsByOwnerId(@PathVariable("cid") Long cid) {
-        //RE
         accountService.deleteAccountsUsingOwnerId(cid);
         return new ResponseEntity(cid,HttpStatus.NO_CONTENT);
     }
