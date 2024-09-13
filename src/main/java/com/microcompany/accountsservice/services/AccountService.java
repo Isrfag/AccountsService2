@@ -4,6 +4,7 @@ import com.microcompany.accountsservice.exception.AccountNotfoundException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.model.Customer;
 import com.microcompany.accountsservice.persistence.AccountRepository;
+import com.microcompany.accountsservice.persistence.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class AccountService implements IAccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private CustomerRepository cRepo;
 
     @Override
     @Transactional
@@ -43,7 +47,8 @@ public class AccountService implements IAccountService {
     }
 
     @Override
-    public List<Account> getAccountByOwnerId(Long ownerId) {
+    public List<Account> getAllAccountByOwnerId(Long ownerId) {
+
         return accountRepository.findByOwnerId(ownerId);
     }
 
@@ -67,9 +72,8 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional
-    public Account withdrawBalance(Long id, int amount, Long ownerId) throws Exception {
+    public Account withdrawBalance(Long id, int amount) throws Exception {
         Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
-        Customer owner = null; // Will be gotten from user service
         int newBalance = newAccount.getBalance() - amount;
         if (newBalance > 0) {
             newAccount.setBalance(newBalance);
@@ -96,5 +100,69 @@ public class AccountService implements IAccountService {
         }*/
     }
 
+    @Override
+    @Transactional
+    public Account getOneAccountById(Long aId) {
+       Account account = accountRepository.findById(aId).orElseThrow();
+       return account;
+    }
 
+    @Override
+    @Transactional
+    public Account createNewOwnerAccount(Long ownerId) {
+        Account newOwnerAccount = new Account();
+        Customer owner = cRepo.findById(ownerId).orElseThrow();
+        newOwnerAccount.setOwner(owner);
+        return newOwnerAccount;
+    }
+
+    @Override
+    @Transactional
+    public Account updateOwnerAccount(Long aid, Long ownerId) {
+        List <Account> a = accountRepository.findByOwnerId(ownerId);
+        Customer owner = cRepo.findById(ownerId).orElseThrow();
+        a.get(1).setOwner(owner);
+        return a.get(1);
+    }
+
+    @Override
+    @Transactional
+    public Account deleteOwnerAccount (Long ownerId) {
+        Account account = accountRepository.findByOwnerId(ownerId).get(1);
+        accountRepository.delete(account);
+        return accountRepository.findByOwnerId(ownerId).get(1);
+    }
+
+    @Override
+    @Transactional
+    public Account addBalance(Long aId, Integer balance) {
+        Account account = accountRepository.findById(aId).orElseThrow();
+        account.setBalance(account.getBalance()+balance);
+        return account;
+
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllOwnerAccounts(Long ownerId) {
+        List<Account> allAccounts = accountRepository.findByOwnerId(ownerId);
+        accountRepository.deleteAll(allAccounts);
+    }
+
+    @Override
+    public boolean canOwnerLoan (Long ownerId, Integer RequestPrestamo) {
+        Customer owner = cRepo.findById(ownerId).orElseThrow() ;
+        List <Account> ownerAccount = accountRepository.findByOwnerId(ownerId);
+        int monto= 0;
+
+        for (Account oC : ownerAccount ) {
+            monto+=oC.getBalance();
+        }
+        if (monto >= RequestPrestamo*0.80) {
+            return  true;
+        }
+        else {
+            return false;
+        }
+    }
 }
