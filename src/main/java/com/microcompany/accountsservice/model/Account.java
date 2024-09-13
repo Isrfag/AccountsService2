@@ -1,5 +1,6 @@
 package com.microcompany.accountsservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
@@ -33,9 +34,14 @@ public class Account {
 
     private int balance;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE} ,fetch=FetchType.LAZY)
+    @JoinColumn(name = "owner_id",insertable = false, updatable = false)
+    @NotNull
+    @JsonIgnore
     Customer owner;
+
+    @Column(name="owner_id", insertable = false, updatable = false)
+    private Long ownerId;
 
 
 }

@@ -24,8 +24,16 @@ public class AccountController {
     public ResponseEntity createAccount (@RequestBody Account newAccount) {
         //revisar exception
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.create(newAccount));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                accountService.create(newAccount));
 
+    }
+
+    @RequestMapping(value="/{cid}", method= RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity<Account> createAccountByOwnerId(@PathVariable("cid") Long ownerId) {
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                accountService.createNewOwnerAccount(ownerId));
     }
 
     @RequestMapping(value = "/all/{cid}",method = RequestMethod.GET, consumes = "application/json")

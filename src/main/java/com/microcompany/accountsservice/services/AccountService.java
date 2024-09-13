@@ -1,6 +1,7 @@
 package com.microcompany.accountsservice.services;
 
 import com.microcompany.accountsservice.exception.AccountNotfoundException;
+import com.microcompany.accountsservice.exception.CustomerNotFoundException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.model.Customer;
 import com.microcompany.accountsservice.persistence.AccountRepository;
@@ -111,7 +112,7 @@ public class AccountService implements IAccountService {
     @Transactional
     public Account createNewOwnerAccount(Long ownerId) {
         Account newOwnerAccount = new Account();
-        Customer owner = cRepo.findById(ownerId).orElseThrow();
+        Customer owner = cRepo.findById(ownerId).orElseThrow(() -> new CustomerNotFoundException("Usuario no encontrado"));
         newOwnerAccount.setOwner(owner);
         return newOwnerAccount;
     }
