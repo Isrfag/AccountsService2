@@ -1,7 +1,10 @@
 package com.microcompany.accountsservice.services;
 
-import com.microcompany.accountsservice.exception.AccountNotfoundException;
+
 import com.microcompany.accountsservice.exception.CustomerNotFoundException;
+
+
+import com.microcompany.accountsservice.exception.AccountNotFoundException;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.model.Customer;
 import com.microcompany.accountsservice.persistence.AccountRepository;
@@ -13,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -41,7 +43,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public Account getAccount(Long id) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
         Customer owner = null; // Will be gotten from user service
         account.setOwner(owner);
         return account;
@@ -49,14 +51,15 @@ public class AccountService implements IAccountService {
 
     @Override
     public List<Account> getAllAccountByOwnerId(Long ownerId) {
-
+        //Verificamos si el usuario existe
+        cRepo.findById(ownerId).orElseThrow(() -> new CustomerNotFoundException("El customer añadido no existe"));
         return accountRepository.findByOwnerId(ownerId);
-    }
+   }
 
     @Override
     @Transactional
     public Account updateAccount(Long id, Account account) {
-        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
         newAccount.setType(account.getType());
         return accountRepository.save(newAccount);
     }
@@ -64,7 +67,7 @@ public class AccountService implements IAccountService {
     @Override
     @Transactional
     public Account addBalance(Long id, int amount, Long ownerId) {
-        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
         Customer owner = null;// Will be gotten from user service
         int newBalance = newAccount.getBalance() + amount;
         newAccount.setBalance(newBalance);
@@ -74,7 +77,7 @@ public class AccountService implements IAccountService {
     @Override
     @Transactional
     public Account withdrawBalance(Long id, int amount) throws Exception {
-        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        Account newAccount = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
         int newBalance = newAccount.getBalance() - amount;
         if (newBalance > 0) {
             newAccount.setBalance(newBalance);
@@ -87,18 +90,15 @@ public class AccountService implements IAccountService {
     @Override
     @Transactional
     public void delete(Long id) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotfoundException(id));
+        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException(id));
         this.accountRepository.delete(account);
     }
 
     @Override
     @Transactional
     public void deleteAccountsUsingOwnerId(Long ownerId) {
+        cRepo.findById(ownerId).orElseThrow(() -> new CustomerNotFoundException("El customer añadido no existe"));
         accountRepository.deleteByOwnerId(ownerId);
-        /*List<Account> accounts = accountRepository.findByOwnerId(ownerId);
-        for (Account account : accounts) {
-            this.accountRepository.delete(account);
-        }*/
     }
 
     @Override

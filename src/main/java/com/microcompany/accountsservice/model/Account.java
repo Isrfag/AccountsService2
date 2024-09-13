@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.*;
@@ -28,10 +25,17 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "No puede quedar en blanco")
+    @NotNull
+    @Size(min = 5, max = 20, message = "Debe ser entre 5 y 20 caracteres")
+    @Pattern(regexp = "Personal|Company", message ="El tipo debe ser 'Personal' o 'Company'")
     private String type;
 
+    @DateTimeFormat
+    @NotNull
     LocalDate openingDate;
 
+    @Min(0)
     private int balance;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE} ,fetch=FetchType.LAZY)
@@ -40,8 +44,15 @@ public class Account {
     @JsonIgnore
     Customer owner;
 
+
     @Column(name="owner_id", insertable = false, updatable = false)
     private Long ownerId;
+
+
+     public void isValid() throws Exception {
+        if (type == null || openingDate == null)
+            throw new Exception("Cuenta no válida");
+    }
 
 
 }
