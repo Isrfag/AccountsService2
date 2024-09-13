@@ -74,12 +74,9 @@ public class AccountController {
 
     @RequestMapping(value ="/ownerall/{cid}",method = RequestMethod.DELETE,consumes = "application/json")
     public ResponseEntity deleteAccountsByOwnerId(@PathVariable("cid") Long cid) {
-<<<<<<< HEAD
-        accountService.deleteAccountsUsingOwnerId(cid);
-=======
+
         //RE
         accountService.deleteAllOwnerAccounts(cid);
->>>>>>> 2336014564564b1853d323e05af0519149cb19ea
         return new ResponseEntity(cid,HttpStatus.NO_CONTENT);
     }
 
