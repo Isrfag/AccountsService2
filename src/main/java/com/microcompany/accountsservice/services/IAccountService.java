@@ -11,16 +11,30 @@ public interface IAccountService {
 
     Account getAccount(Long id);
 
-    List<Account> getAccountByOwnerId(Long ownerId);
+    List<Account> getAllAccountByOwnerId(Long ownerId);
 
     Account updateAccount(Long id, Account account);
 
     Account addBalance(Long id, int amount, Long ownerId);
 
-    Account withdrawBalance(Long id, int amount, Long ownerId) throws Exception;
+    Account withdrawBalance(Long id, int amount) throws Exception;
 
     void delete(Long id);
 
     void deleteAccountsUsingOwnerId(Long ownerId);
+
+    Account getOneAccountById(Long aId);
+
+    Account createNewOwnerAccount( Long ownerId);
+
+    Account updateOwnerAccount (Long aid,Long ownerId);
+
+    Account deleteOwnerAccount (Long ownerId);
+
+    Account addBalance (Long aId,Integer balance);
+
+    void deleteAllOwnerAccounts(Long ownerId);
+
+    boolean canOwnerLoan (Long OwnerId, Integer RequestPrestamo);
 
 }
