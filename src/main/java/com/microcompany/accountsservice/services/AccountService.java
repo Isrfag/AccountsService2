@@ -104,26 +104,27 @@ public class AccountService implements IAccountService {
     @Override
     @Transactional
     public Account getOneAccountById(Long aId) {
-       Account account = accountRepository.findById(aId).orElseThrow();
+       Account account = accountRepository.findById(aId).orElseThrow(() -> new AccountNotFoundException(aId));
        return account;
     }
 
     @Override
     @Transactional
-    public Account createNewOwnerAccount(Long ownerId) {
-        Account newOwnerAccount = new Account();
-        Customer owner = cRepo.findById(ownerId).orElseThrow(() -> new CustomerNotFoundException("Usuario no encontrado"));
-        newOwnerAccount.setOwner(owner);
-        return newOwnerAccount;
+    public Account createNewOwnerAccount(Long ownerId,Account newAccount) {
+        cRepo.findById(ownerId).orElseThrow(() -> new CustomerNotFoundException("Usuario no encontrado"));
+        newAccount.setOwnerId(ownerId);
+        accountRepository.save(newAccount);
+        return newAccount;
     }
 
     @Override
     @Transactional
-    public Account updateOwnerAccount(Long ownerId) {
-        List <Account> a = accountRepository.findByOwnerId(ownerId);
-        Customer owner = cRepo.findById(ownerId).orElseThrow();
-        a.get(1).setOwner(owner);
-        return a.get(1);
+    public Account updateOwnerAccount(Long aid, Long ownerId) {
+        cRepo.findById(ownerId).orElseThrow(() -> new CustomerNotFoundException("Usuario no encontrado"));
+        Account account = accountRepository.findById(aid).orElseThrow(() -> new AccountNotFoundException(1l));
+        account.setId(aid);
+        account.setOwnerId(ownerId);
+        return accountRepository.save(account);
     }
 
     @Override

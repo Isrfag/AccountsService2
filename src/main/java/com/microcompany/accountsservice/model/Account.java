@@ -40,12 +40,11 @@ public class Account {
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE} ,fetch=FetchType.LAZY)
     @JoinColumn(name = "owner_id",insertable = false, updatable = false)
-    @NotNull
     @JsonIgnore
     Customer owner;
 
-
     @Column(name="owner_id", insertable = false, updatable = false)
+    @NotNull
     private Long ownerId;
 
 

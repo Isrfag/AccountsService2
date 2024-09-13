@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolationException;
@@ -19,13 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@RestController
+@RestControllerAdvice
 public class GlobalExceptionController {
 
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<StatusMessage> handleNotFoundException(GlobalException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new StatusMessage(HttpStatus.NOT_FOUND.value(), "GE: Recurso no encontrado"));
     }
+
 
     @ExceptionHandler(AccountNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -65,7 +67,7 @@ public class GlobalExceptionController {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-    ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
-        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.PRECONDITION_FAILED);
+    StatusMessage handleConstraintViolationException(ConstraintViolationException e) {
+        return new StatusMessage(HttpStatus.PRECONDITION_FAILED.value() ,"Restricción violada ");
     }
 }
