@@ -3,10 +3,7 @@ package com.microcompany.accountsservice.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.*;
@@ -30,6 +27,7 @@ public class Account {
     @NotBlank(message = "No puede quedar en blanco")
     @NotNull
     @Size(min = 5, max = 20, message = "Debe ser entre 5 y 20 caracteres")
+    @Pattern(regexp = "Personal|Company", message ="El tipo debe ser 'Personal' o 'Company'")
     private String type;
 
     @DateTimeFormat
