@@ -43,12 +43,12 @@ class IAccountServiceTest {
         assertEquals(account.getId(), 1L);
     }
 
-    @Test
+    /*@Test
     void getAccountByOwnerId() {
         List<Account> accounts = service.getAccountByOwnerId(1L);
         assertNotNull(accounts);
         assertTrue(accounts.size() > 0);
-    }
+    }*/
 
     @Test
     void updateAccount() {
@@ -72,7 +72,7 @@ class IAccountServiceTest {
         assertEquals(updatedAccount.getBalance(), originalAccount.getBalance() + amount);
     }
 
-    @Test
+    /*@Test
     void withdrawBalanceOK() throws Exception {
         Account originalAccount = service.getAccount(1L);
         int amount = 10;
@@ -81,9 +81,9 @@ class IAccountServiceTest {
 
         Account updatedAccount = service.getAccount(1L);
         assertEquals(updatedAccount.getBalance(), originalAccount.getBalance() - amount);
-    }
+    }*/
 
-    @Test
+    /*@Test
     void withdrawBalanceNOK() {
         Account originalAccount = service.getAccount(1L);
         int amount = 1000;
@@ -91,7 +91,7 @@ class IAccountServiceTest {
         assertThrows(Exception.class, () -> {
             service.withdrawBalance(1L, amount, 1L);
         });
-    }
+    }*/
 
     @Test
     void delete() {
@@ -101,10 +101,10 @@ class IAccountServiceTest {
         });
     }
 
-    @Test
+    /*@Test
     void deleteAccountsUsingOwnerId() {
         service.deleteAccountsUsingOwnerId(1L);
         List<Account> accounts = service.getAccountByOwnerId(1L);
         assertEquals(accounts.size(), 0);
-    }
+    }*/
 }

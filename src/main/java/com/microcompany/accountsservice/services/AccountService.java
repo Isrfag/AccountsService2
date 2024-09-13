@@ -48,10 +48,7 @@ public class AccountService implements IAccountService {
 
     @Override
     public List<Account> getAllAccountByOwnerId(Long ownerId) {
-<<<<<<< HEAD
-=======
 
->>>>>>> master
         return accountRepository.findByOwnerId(ownerId);
     }
 

@@ -33,11 +33,11 @@ public class AccountController {
 
         List<Account>allAcounts = new ArrayList<>();
 
-        try {
+        //try {
             allAcounts= accountService.getAllAccountByOwnerId(id);
-        } catch () {
+        //} catch () {
 
-        }
+        //}
 
 
 
