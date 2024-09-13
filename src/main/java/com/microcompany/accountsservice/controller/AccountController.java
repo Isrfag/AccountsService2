@@ -3,6 +3,7 @@ package com.microcompany.accountsservice.controller;
 import com.microcompany.accountsservice.model.Account;
 import com.microcompany.accountsservice.services.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +20,7 @@ public class AccountController {
     @Autowired
     IAccountService accountService;
 
-    @RequestMapping(value = "",method = RequestMethod.POST)
+    @RequestMapping(value = "",method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity createAccount (@RequestBody Account newAccount) {
         //revisar exception
 
@@ -27,7 +28,7 @@ public class AccountController {
 
     }
 
-    @RequestMapping(value = "/all/{cid}",method = RequestMethod.GET)
+    @RequestMapping(value = "/all/{cid}",method = RequestMethod.GET, consumes = "application/json")
     public ResponseEntity <List<Account>> getAccountsByCustomer(@PathVariable("cid") Long id) {
         //RE
 
@@ -50,42 +51,56 @@ public class AccountController {
 
     }
 
-    @RequestMapping(value="/{aid}",method = RequestMethod.GET)
+    @RequestMapping(value="/{aid}",method = RequestMethod.GET, consumes = "application/json")
     public ResponseEntity getSingleAccount(@PathVariable("aid") Long id) {
         //RE
-        Account account = accountService.getAccount(id);
+        Account account = accountService.getOneAccountById(id);
         return new ResponseEntity(account,HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{aid}",method = RequestMethod.PUT)
-    public ResponseEntity updateAccount(@PathVariable("cid") Long id, @RequestBody Account account) {
+    @RequestMapping(value="/{aid}",method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity updateAccount(@PathVariable("aid") Long id, @RequestBody Account account) {
         //RE
         account.setId(id);
         accountService.updateAccount(account.getId(),account);
         return new ResponseEntity(account,HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value="/{aid}",method = RequestMethod.DELETE)
-    public ResponseEntity deleteAccount(@PathVariable("cid") Long id) {
+    @RequestMapping(value="/owner/{cid}",method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity updateAccountByOwnerId (@PathVariable("cid") Long ownerId,@RequestBody Account account ) {
+
+        accountService.updateOwnerAccount(ownerId);
+        return new ResponseEntity(account, HttpStatus.ACCEPTED);
+    }
+
+    @RequestMapping(value="/{aid}",method = RequestMethod.DELETE, consumes = "application/json")
+    public ResponseEntity deleteAccount(@PathVariable("aid") Long id) {
         //Devolver cuerpo y RE
         accountService.delete(id);
         return new ResponseEntity(id,HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/all/{cid}",method = RequestMethod.DELETE)
+    @RequestMapping(value="/ownerd/{cid}",method = RequestMethod.DELETE, consumes = "application/json")
+    public ResponseEntity deleteOwnerAccount(@PathVariable("cid")Long ownerId ) {
+        accountService.deleteOwnerAccount(ownerId);
+        return new ResponseEntity(ownerId,HttpStatus.NO_CONTENT);
+    }
+
+
+    @RequestMapping(value ="/ownerall/{cid}",method = RequestMethod.DELETE,consumes = "application/json")
     public ResponseEntity deleteAccountsByOwnerId(@PathVariable("cid") Long cid) {
         //RE
-        accountService.deleteAccountsUsingOwnerId(cid);
+        accountService.deleteAllOwnerAccounts(cid);
         return new ResponseEntity(cid,HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/{aid}/withdrawbalance/{monto}",method = RequestMethod.POST)
+    @RequestMapping(value = "/{aid}/withdrawbalance/{monto}",method = RequestMethod.POST,  consumes = "application/json")
     public ResponseEntity addBalanceToAccount(@PathVariable("aid")Long id, @PathVariable("monto") Integer balance) {
         //RE
         return new ResponseEntity(accountService.addBalance(id,balance),HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping(value = "/{aid}/addbalance/{monto}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{aid}/addbalance/{monto}", method = RequestMethod.POST , consumes = "application/json")
     public ResponseEntity withdrawBalanceToAccount(@PathVariable("aid")Long id, @PathVariable("monto") Integer balance) {
         //RE
         return new ResponseEntity(accountService.addBalance(id,balance),HttpStatus.ACCEPTED);
