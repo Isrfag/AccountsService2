@@ -118,7 +118,7 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional
-    public Account updateOwnerAccount(Long aid, Long ownerId) {
+    public Account updateOwnerAccount(Long ownerId) {
         List <Account> a = accountRepository.findByOwnerId(ownerId);
         Customer owner = cRepo.findById(ownerId).orElseThrow();
         a.get(1).setOwner(owner);
@@ -127,10 +127,9 @@ public class AccountService implements IAccountService {
 
     @Override
     @Transactional
-    public Account deleteOwnerAccount (Long ownerId) {
+    public void deleteOwnerAccount (Long ownerId) {
         Account account = accountRepository.findByOwnerId(ownerId).get(1);
         accountRepository.delete(account);
-        return accountRepository.findByOwnerId(ownerId).get(1);
     }
 
     @Override
