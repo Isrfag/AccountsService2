@@ -27,9 +27,9 @@ public interface IAccountService {
 
     Account createNewOwnerAccount( Long ownerId);
 
-    Account updateOwnerAccount (Long aid,Long ownerId);
+    Account updateOwnerAccount (Long ownerId);
 
-    Account deleteOwnerAccount (Long ownerId);
+    void deleteOwnerAccount (Long ownerId);
 
     Account addBalance (Long aId,Integer balance);
 
